@@ -17,6 +17,12 @@ module.exports = function getLatestRelease(pluginConfig, config, callback) {
         user: githubRepo[0],
         repo: githubRepo[1],
     }, (err, latestRelease) => {
+        const isNotFound = err && (err.code === 404 || /not found/i.test(err.message))
+
+        if (isNotFound) {
+            return callback(null, {})
+        }
+
         if (err) {
             return callback(err);
         }
